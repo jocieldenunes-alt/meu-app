@@ -15,16 +15,15 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 .content{padding:15px;flex:1;padding-bottom:100px}
 .card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:15px}
 .clabel{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
-.ctrl{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;color:#fff;width:100%;margin-bottom:12px;font-size:14px;appearance:none}
+.ctrl{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;color:#fff;width:100%;margin-bottom:12px;font-size:14px}
 .btn-broker{background:var(--s2);border:1px solid var(--border);padding:12px 5px;border-radius:8px;color:#fff;font-size:11px;cursor:pointer;width:31%;margin-bottom:5px;display:inline-block;text-align:center}
 .btn-broker.active{border-color:var(--gold);background:rgba(255,200,0,0.1);color:var(--gold)}
-.btn-analyze{width:100%;background:linear-gradient(135deg, var(--gold), #e6b000);color:#000;border:none;border-radius:14px;padding:20px;font-family:'Bebas Neue',sans-serif;font-size:22px;cursor:pointer;font-weight:bold}
+.btn-analyze{width:100%;background:linear-gradient(135deg, var(--gold), #e6b000);color:#000;border:none;border-radius:14px;padding:20px;font-family:'Bebas Neue',sans-serif;font-size:22px;cursor:pointer;font-weight:bold;display:block}
 .nav{position:fixed;bottom:0;width:100%;background:var(--bg);border-top:1px solid var(--border);display:flex;padding:15px;justify-content:space-around;z-index:999}
-.nav-btn{background:none;border:none;color:var(--muted);font-size:12px;font-weight:bold;padding:10px}
+.nav-btn{background:none;border:none;color:var(--muted);font-size:12px;font-weight:bold;padding:10px;cursor:pointer;text-transform:uppercase}
 .nav-btn.active{color:var(--gold)}
 #previewImg{width:100%;border-radius:12px;margin-bottom:15px;display:none;border:2px solid var(--gold)}
-/* Estilo corrigido para o botão de arquivo */
-.file-wrapper { position: relative; width: 100%; height: 60px; background: var(--s2); border: 2px dashed var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.file-wrapper { position: relative; width: 100%; height: 60px; background: var(--s2); border: 2px dashed var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer;}
 .file-wrapper input { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 10; }
 .file-wrapper span { color: var(--gold); font-weight: bold; pointer-events: none; }
 </style>
@@ -40,7 +39,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
   <div class="content">
     <div class="card">
       <div class="clabel">⭐ Ativo Favorito</div>
-      <button class="ctrl" style="color:var(--gold);font-weight:bold" onclick="selectAsset('Crypto IDX')">MERCADO: CRYPTO IDX</button>
+      <button class="ctrl" style="color:var(--gold);font-weight:bold;cursor:pointer" onclick="document.getElementById('cfgAsset').value='Crypto IDX'">MERCADO: CRYPTO IDX</button>
       
       <div style="display:flex; gap:10px">
           <div style="flex:2">
@@ -84,27 +83,27 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
         <button class="btn-analyze" onclick="analyze()">◆ GERAR ANÁLISE AGORA ◆</button>
     </div>
 
-    <div id="loading" style="display:none; text-align:center; color:var(--gold); padding:20px">📡 PROCESSANDO...</div>
+    <div id="loading" style="display:none; text-align:center; color:var(--gold); padding:20px">📡 PROCESSANDO... AGUARDE...</div>
   </div>
 
   <nav class="nav">
-    <button class="nav-btn active">🔍 ANALISAR</button>
-    <button class="nav-btn" onclick="goConfig()">⚙️ CONFIG</button>
+    <button class="nav-btn active" onclick="location.reload()">🔍 ANALISAR</button>
+    <button class="nav-btn" onclick="goConfig()" style="cursor:pointer">⚙️ CONFIG</button>
   </nav>
 </div>
 
 <script>
 let imgB64 = null;
 
-function selectAsset(name) { document.getElementById('cfgAsset').value = name; }
-
-function setBroker(name, btn) {
+// Função para selecionar corretora
+window.setBroker = function(name, btn) {
     document.getElementById('selectedBroker').value = name;
     document.querySelectorAll('.btn-broker').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-}
+};
 
-function handleFile(e) {
+// Função para ler o arquivo
+window.handleFile = function(e) {
     const file = e.target.files[0];
     if(file) {
         document.getElementById('fileLabel').innerText = "FOTO CARREGADA!";
@@ -117,20 +116,34 @@ function handleFile(e) {
         };
         reader.readAsDataURL(file);
     }
-}
+};
 
-function goConfig() {
-    const current = localStorage.getItem('jn_gemini_key') || "";
-    const key = prompt("Cole sua chave AIza abaixo:", current);
-    if(key !== null) {
-        localStorage.setItem('jn_gemini_key', key.trim());
-        alert("Chave salva com sucesso!");
+// Função de Configuração
+window.goConfig = function() {
+    try {
+        const current = localStorage.getItem('jn_gemini_key') || "";
+        const key = window.prompt("Cole sua chave Gemini (AIza...) aqui:", current);
+        if(key !== null) {
+            localStorage.setItem('jn_gemini_key', key.trim());
+            alert("Chave guardada com sucesso!");
+        }
+    } catch (err) {
+        alert("Erro ao abrir configuração: " + err.message);
     }
-}
+};
 
-async function analyze() {
+// Função de Análise Principal
+window.analyze = async function() {
     const apiKey = localStorage.getItem('jn_gemini_key');
-    if(!apiKey) { alert("Configure sua chave no botão CONFIG!"); return; }
+    if(!apiKey || apiKey === "") { 
+        alert("Falta a chave! Clique em CONFIG e cole a sua chave AIza primeiro."); 
+        return; 
+    }
+
+    if(!imgB64) {
+        alert("Selecione uma foto do gráfico primeiro!");
+        return;
+    }
 
     document.getElementById('loading').style.display = 'block';
     document.getElementById('areaBotao').style.display = 'none';
@@ -138,37 +151,45 @@ async function analyze() {
     const payload = {
         contents: [{
             parts: [
-                {text: "Analise o gráfico. Responda JSON: {\"verdict\": \"CALL/PUT\", \"confidence\": 0-100, \"reason\": \"texto\"}"},
+                {text: "Analise o gráfico. Diga se é CALL ou PUT. Responda apenas JSON."},
                 {inline_data: {mime_type: "image/jpeg", data: imgB64}}
             ]
         }]
     };
 
     try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
             method: 'POST',
             body: JSON.stringify(payload)
         });
+        
         const data = await res.json();
+        
+        if(data.error) {
+            alert("Erro na Chave Gemini: " + data.error.message);
+            return;
+        }
+
         const responseText = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
         const d = JSON.parse(responseText);
         
         const broker = document.getElementById('selectedBroker').value;
         const msg = `SINAL JNTRADER\nCorretora: ${broker}\nDireção: ${d.verdict}\nConfiança: ${d.confidence}%\nMotivo: ${d.reason}`;
         
-        await fetch(`https://api.telegram.org/bot8139536830:AAEmUvYf-u83V_m79C7Aiv9O_F36m3Y66fU/sendMessage`, {
+        await fetch('https://api.telegram.org/bot8139536830:AAEmUvYf-u83V_m79C7Aiv9O_F36m3Y66fU/sendMessage', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({chat_id: '1457106603', text: msg})
         });
-        alert("Sinal enviado ao Telegram!");
+        
+        alert("✅ SINAL ENVIADO COM SUCESSO!");
     } catch(e) {
-        alert("Erro na análise. Verifique sua chave no CONFIG.");
+        alert("Erro: Verifique a ligação ou a chave Gemini.");
     } finally {
         document.getElementById('loading').style.display = 'none';
         document.getElementById('areaBotao').style.display = 'block';
     }
-}
+};
 </script>
 </body>
 </html>

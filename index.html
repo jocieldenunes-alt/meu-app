@@ -24,7 +24,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 .nav-btn.active{color:var(--gold)}
 #previewImg{width:100%;border-radius:12px;margin-bottom:15px;display:none;border:2px solid var(--gold)}
 .file-wrapper { position: relative; width: 100%; height: 70px; background: var(--s2); border: 2px dashed var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer;}
-.file-wrapper input { position: absolute; left: 0; top: 0; opacity: 1; width: 100%; height: 100%; cursor: pointer; z-index: 10; opacity: 0;}
+.file-wrapper input { position: absolute; left: 0; top: 0; width: 100%; height: 100%; cursor: pointer; z-index: 10; opacity: 0;}
 .file-wrapper span { color: var(--gold); font-weight: bold; pointer-events: none; position: absolute;}
 </style>
 </head>
@@ -33,24 +33,23 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 <div class="app">
   <div class="header">
     <div class="header-name">JNTRADER IA PRO</div>
-    <div style="font-size:10px;color:var(--gold);letter-spacing:2px">SISTEMA COMPLETO • PAID TIER</div>
+    <div style="font-size:10px;color:var(--gold);letter-spacing:2px">SISTEMA COMPLETO</div>
   </div>
 
   <div class="content">
     <div class="card">
-      <div class="clabel">⭐ Ativo em Destaque</div>
-      <button class="ctrl" style="color:var(--gold);font-weight:bold" id="btnCrypto">MERCADO: CRYPTO IDX</button>
+      <div class="clabel">⭐ Destaque</div>
+      <button class="ctrl" style="color:var(--gold);font-weight:bold" id="btnCrypto">CRYPTO IDX</button>
       
       <div style="display:flex; gap:10px; margin-top:10px">
           <div style="flex:2">
-            <div class="clabel">📊 Selecionar Ativo</div>
+            <div class="clabel">📊 Ativo</div>
             <select class="ctrl" id="cfgAsset">
                 <option value="Crypto IDX">Crypto IDX</option>
                 <option value="EUR/USD">EUR/USD</option>
                 <option value="EUR/USD (OTC)">EUR/USD (OTC)</option>
                 <option value="USD/BRL (OTC)">USD/BRL (OTC)</option>
                 <option value="EUR/JPY">EUR/JPY</option>
-                <option value="AUD/CAD">AUD/CAD</option>
             </select>
           </div>
           <div style="flex:1">
@@ -73,20 +72,20 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 
     <div class="card">
       <div class="clabel">📸 PASSO 1: ANEXAR PRINT</div>
-      <div class="file-wrapper" id="uploadArea">
+      <div class="file-wrapper">
           <input type="file" id="fileInput" accept="image/*">
-          <span id="fileLabel">CLIQUE PARA SELECIONAR</span>
+          <span id="fileLabel">SELECIONAR FOTO</span>
       </div>
     </div>
 
     <img id="previewImg">
     
     <div id="areaBotao" style="display:none">
-        <div class="clabel">🚀 PASSO 2: EXECUTAR IA</div>
-        <button class="btn-analyze" id="btnAnalyze">◆ ANALISAR E ENVIAR SINAL ◆</button>
+        <div class="clabel">🚀 PASSO 2: ANALISAR</div>
+        <button class="btn-analyze" id="btnAnalyze">◆ ANALISAR E ENVIAR ◆</button>
     </div>
 
-    <div id="loading" style="display:none; text-align:center; color:var(--gold); padding:20px; font-weight:bold">📡 PROCESSANDO... AGUARDE...</div>
+    <div id="loading" style="display:none; text-align:center; color:var(--gold); padding:20px; font-weight:bold">📡 PROCESSANDO...</div>
   </div>
 
   <nav class="nav">
@@ -98,6 +97,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 <script>
 let imgB64 = null;
 
+// Lógica de seleção de botões
 document.querySelectorAll('.btn-broker').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.btn-broker').forEach(b => b.classList.remove('active'));
@@ -106,14 +106,12 @@ document.querySelectorAll('.btn-broker').forEach(btn => {
     });
 });
 
-document.getElementById('btnCrypto').addEventListener('click', () => {
-    document.getElementById('cfgAsset').value = 'Crypto IDX';
-});
+document.getElementById('btnCrypto').addEventListener('click', () => { document.getElementById('cfgAsset').value = 'Crypto IDX'; });
 
 document.getElementById('fileInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if(file) {
-        document.getElementById('fileLabel').innerText = "FOTO CARREGADA!";
+        document.getElementById('fileLabel').innerText = "FOTO OK!";
         const reader = new FileReader();
         reader.onload = (ev) => {
             imgB64 = ev.target.result.split(',')[1];
@@ -126,43 +124,48 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 });
 
 document.getElementById('btnConfig').addEventListener('click', () => {
-    const key = prompt("Cole sua chave Gemini (AIza...):", localStorage.getItem('jn_gemini_key') || "");
-    if(key) { localStorage.setItem('jn_gemini_key', key.trim()); alert("Chave Salva!"); }
+    const key = prompt("Chave Gemini:", localStorage.getItem('jn_gemini_key') || "");
+    if(key) { localStorage.setItem('jn_gemini_key', key.trim()); alert("Salvo!"); }
 });
 
 document.getElementById('btnAnalyze').addEventListener('click', async () => {
     const apiKey = localStorage.getItem('jn_gemini_key');
-    if(!apiKey) return alert("Configure sua chave no CONFIG!");
+    if(!apiKey) return alert("Configure a chave!");
 
     document.getElementById('loading').style.display = 'block';
     document.getElementById('areaBotao').style.display = 'none';
 
     const payload = {
-        contents: [{
-            parts: [
-                {text: "Analise o gráfico. Responda APENAS em JSON: {\"verdict\": \"CALL/PUT\", \"confidence\": 0-100, \"reason\": \"texto\"}"},
-                {inline_data: {mime_type: "image/jpeg", data: imgB64}}
-            ]
-        }]
+        contents: [{ parts: [
+            {text: "Analise o gráfico. Responda JSON: {\"verdict\": \"CALL/PUT\", \"confidence\": 0-100, \"reason\": \"texto\"}"},
+            {inline_data: {mime_type: "image/jpeg", data: imgB64}}
+        ]}]
     };
 
     try {
-        // CORREÇÃO DO MODELO PARA O GEMINI 2.0 FLASH
+        // MODELO ATUALIZADO PARA EVITAR O ERRO DA FOTO 3
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
             method: 'POST', body: JSON.stringify(payload)
         });
         const data = await res.json();
         
-        if(data.error) { alert("Erro na API: " + data.error.message); return; }
+        if(data.error) {
+            if(data.error.code === 429) {
+                alert("Limite de cota atingido (Erro 429). Aguarde 60 segundos e tente de novo.");
+            } else {
+                alert("Erro na API: " + data.error.message);
+            }
+            return;
+        }
 
         const text = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
         const d = JSON.parse(text);
         
-        const msg = `🚀 <b>SINAL JNTRADER</b>\n\n<b>Corretora:</b> ${document.getElementById('selectedBroker').value}\n<b>Ativo:</b> ${document.getElementById('cfgAsset').value}\n<b>Direção:</b> ${d.verdict}\n<b>Confiança:</b> ${d.confidence}%\n<b>Análise:</b> ${d.reason}`;
+        const msg = `🚀 SINAL JNTRADER\n\nCorretora: ${document.getElementById('selectedBroker').value}\nAtivo: ${document.getElementById('cfgAsset').value}\nDireção: ${d.verdict}\nConfiança: ${d.confidence}%\nAnálise: ${d.reason}`;
         
         await fetch(`https://api.telegram.org/bot8139536830:AAEmUvYf-u83V_m79C7Aiv9O_F36m3Y66fU/sendMessage`, {
             method: 'POST', headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({chat_id: '1457106603', text: msg, parse_mode: 'HTML'})
+            body: JSON.stringify({chat_id: '1457106603', text: msg})
         });
         alert("Sinal enviado!");
     } catch(e) { alert("Erro na análise."); }

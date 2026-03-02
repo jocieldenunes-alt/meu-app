@@ -32,3 +32,97 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif}
 
 <div class="app">
   <div class="header">
+    <div class="header-name">JNTRADER IA PRO</div>
+    <div style="font-size:10px;color:var(--gold);letter-spacing:2px">SISTEMA COMPLETO • GOOGLE GEMINI</div>
+  </div>
+
+  <div class="content">
+    
+    <div class="card">
+      <div class="clabel">⭐ Destaque Operacional</div>
+      <button class="ctrl" style="background:rgba(255,200,0,0.1); border-color:var(--gold); font-weight:bold; color:var(--gold)" onclick="document.getElementById('cfgAsset').value='Crypto IDX'">MERCADO: CRYPTO IDX</button>
+      
+      <div style="display:flex; gap:10px; margin-top:5px">
+          <div style="flex:2">
+              <div class="clabel">📊 Escolher Ativo</div>
+              <select class="ctrl" id="cfgAsset">
+                <option value="Crypto IDX">Crypto IDX</option>
+                <option value="EUR/USD">EUR/USD</option>
+                <option value="EUR/USD (OTC)">EUR/USD (OTC)</option>
+                <option value="USD/BRL (OTC)">USD/BRL (OTC)</option>
+                <option value="EUR/JPY">EUR/JPY</option>
+                <option value="AUD/CAD">AUD/CAD</option>
+              </select>
+          </div>
+          <div style="flex:1">
+              <div class="clabel">⏱️ Timeframe</div>
+              <select class="ctrl" id="cfgTimeframe">
+                <option value="M1">M1</option>
+                <option value="M5" selected>M5</option>
+                <option value="M15">M15</option>
+              </select>
+          </div>
+      </div>
+
+      <div class="clabel">🏢 Selecionar Corretora</div>
+      <div style="display:flex; flex-wrap:wrap; gap:5px" id="brokerList">
+          <button class="btn-broker active" onclick="setBroker('Avalon', this)">Avalon</button>
+          <button class="btn-broker" onclick="setBroker('Stockity', this)">Stockity</button>
+          <button class="btn-broker" onclick="setBroker('Bullex', this)">Bullex</button>
+          <button class="btn-broker" onclick="setBroker('Polarium', this)">Polarium</button>
+          <button class="btn-broker" onclick="setBroker('IQ Option', this)">IQ Option</button>
+          <button class="btn-broker" onclick="setBroker('Quotex', this)">Quotex</button>
+      </div>
+      <input type="hidden" id="selectedBroker" value="Avalon">
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <div class="clabel">📸 PASSO 1: ENVIAR PRINT DO GRÁFICO</div>
+      <input type="file" id="fileInput" accept="image/*" class="input-file-custom" onchange="handleFile(event)" onclick="this.value=null;">
+      <p style="font-size:11px; color:var(--muted); margin-top:10px">Se não abrir no celular, use uma Aba Anônima.</p>
+    </div>
+
+    <img id="previewImg">
+    
+    <div id="areaBotao" style="display:none">
+        <div class="clabel">🚀 PASSO 2: EXECUTAR ANÁLISE</div>
+        <button class="btn-analyze" id="btnAnalyze" onclick="analyze()">◆ ANALISAR E ENVIAR SINAL ◆</button>
+    </div>
+
+    <div class="loading" id="loading">📡 CONECTANDO AO SERVIDOR GEMINI... ANALISANDO...</div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-btn active">🔍 Analisar</div>
+    <div class="nav-btn" onclick="goConfig()">⚙️ Config</div>
+  </nav>
+</div>
+
+<script>
+const TELEGRAM_TOKEN = '8139536830:AAEmUvYf-u83V_m79C7Aiv9O_F36m3Y66fU'; 
+const TELEGRAM_CHAT_ID = '1457106603'; 
+let imgB64 = null;
+
+function setBroker(name, btn) {
+    document.getElementById('selectedBroker').value = name;
+    document.querySelectorAll('.btn-broker').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function handleFile(e) {
+  const file = e.target.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      imgB64 = ev.target.result.split(',')[1];
+      document.getElementById('previewImg').src = ev.target.result;
+      document.getElementById('previewImg').style.display = 'block';
+      document.getElementById('areaBotao').style.display = 'block';
+      window.scrollTo(0,document.body.scrollHeight);
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function goConfig() {
+    let key = prompt("Insira sua Gemini Key (AIza...):", localStorage.getItem('jn_gemini

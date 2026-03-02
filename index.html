@@ -4,281 +4,163 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#ffc800">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="JNTrader IA">
-<meta name="mobile-web-app-capable" content="yes">
-<title>JNTrader IA</title>
+<title>JNTrader IA Pro</title>
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Bebas+Neue&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Bebas+Neue&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#050810;
-  --s1:#0a0f1e;
-  --s2:#0f1628;
-  --s3:#162035;
-  --border:#1c2d45;
-  --border2:#253d5a;
-  --gold:#ffc800;
-  --gold2:#ffdc50;
-  --gold-dim:rgba(255,200,0,0.1);
-  --gold-glow:rgba(255,200,0,0.25);
-  --green:#00e87a;
-  --green-dim:rgba(0,232,122,0.1);
-  --red:#ff2d55;
-  --red-dim:rgba(255,45,85,0.1);
-  --blue:#00aaff;
-  --blue-dim:rgba(0,170,255,0.1);
-  --orange:#ff7a00;
-  --purple:#9b59ff;
-  --text:#ccddf0;
-  --text2:#7a9ab8;
-  --muted:#3d5a78;
-  --safe-t:env(safe-area-inset-top,0px);
-  --safe-b:env(safe-area-inset-bottom,0px);
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overscroll-behavior:none}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased}
-
-/* ATMOSPHERIC BG */
-body::before{
-  content:'';position:fixed;inset:0;
-  background:
-    radial-gradient(ellipse 70% 50% at 15% 5%,rgba(255,200,0,0.06) 0%,transparent 55%),
-    radial-gradient(ellipse 60% 50% at 85% 90%,rgba(0,170,255,0.05) 0%,transparent 55%),
-    radial-gradient(ellipse 40% 30% at 50% 50%,rgba(0,232,122,0.02) 0%,transparent 60%),
-    linear-gradient(rgba(0,170,255,0.015) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,170,255,0.015) 1px,transparent 1px);
-  background-size:auto,auto,auto,48px 48px,48px 48px;
-  pointer-events:none;z-index:0;
-}
-
-/* ═══ SPLASH ═══════════════════════════════════════════════════════════════ */
-.splash{
-  position:fixed;inset:0;background:var(--bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:9999;transition:opacity 0.7s ease;
-}
-.splash.hide{opacity:0;pointer-events:none}
-
-.splash-logo-wrap{position:relative;margin-bottom:36px}
-.splash-hexagon{
-  width:110px;height:110px;
-  background:linear-gradient(135deg,#1a1a00,#0a0f1e);
-  border:2px solid var(--gold);
-  border-radius:20px;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:
-    0 0 40px var(--gold-glow),
-    0 0 80px rgba(255,200,0,0.15),
-    inset 0 0 30px rgba(255,200,0,0.05);
-  animation:logoGlow 2.5s ease-in-out infinite;
-}
-@keyframes logoGlow{
-  0%,100%{box-shadow:0 0 40px var(--gold-glow),0 0 80px rgba(255,200,0,0.15),inset 0 0 30px rgba(255,200,0,0.05)}
-  50%{box-shadow:0 0 60px rgba(255,200,0,0.5),0 0 120px rgba(255,200,0,0.25),inset 0 0 40px rgba(255,200,0,0.1)}
-}
-.splash-jn{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1;letter-spacing:4px;background:linear-gradient(135deg,var(--gold),var(--gold2),#fff8d0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-
-.splash-corner{
-  position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid;
-}
-.splash-corner.tl{top:-8px;left:-8px;border-width:2px 0 0 2px}
-.splash-corner.tr{top:-8px;right:-8px;border-width:2px 2px 0 0}
-.splash-corner.bl{bottom:-8px;left:-8px;border-width:0 0 2px 2px}
-.splash-corner.br{bottom:-8px;right:-8px;border-width:0 2px 2px 0}
-
-.splash-brand{text-align:center;margin-bottom:12px}
-.splash-name{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:6px;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.splash-ia{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold);letter-spacing:8px;opacity:0.8;margin-top:2px}
-.splash-tagline{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:44px;text-align:center}
-
-.splash-progress{width:200px;height:2px;background:var(--s3);border-radius:2px;overflow:hidden}
-.splash-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;animation:pfill 2s ease forwards}
-@keyframes pfill{0%{width:0}100%{width:100%}}
-
-/* ═══ APP LAYOUT ═══════════════════════════════════════════════════════════ */
-.app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1}
-.content{flex:1;overflow-y:auto;padding-bottom:calc(68px + var(--safe-b));-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
-.page{display:none;padding:14px}
-.page.active{display:block}
-
-/* ═══ HEADER ═══════════════════════════════════════════════════════════════ */
-.header{
-  padding:calc(12px + var(--safe-t)) 16px 12px;
-  background:rgba(5,8,16,0.95);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:100;
-}
-.header-inner{display:flex;align-items:center;justify-content:space-between}
-.header-logo{display:flex;align-items:center;gap:10px}
-.header-emblem{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,rgba(255,200,0,0.15),rgba(255,200,0,0.05));
-  border:1px solid rgba(255,200,0,0.4);border-radius:9px;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 12px rgba(255,200,0,0.2);
-}
-.header-emblem-text{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.header-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.header-ia{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;opacity:0.7;margin-top:-2px}
-.header-badge{
-  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold);
-  background:var(--gold-dim);border:1px solid rgba(255,200,0,0.25);
-  padding:3px 10px;border-radius:20px;letter-spacing:1px;max-width:140px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-
-/* ═══ BOTTOM NAV ══════════════════════════════════════════════════════════ */
-.nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:200;
-  background:rgba(5,8,16,0.98);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-top:1px solid var(--border);
-  display:flex;padding-bottom:var(--safe-b);
-}
-.nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:9px 0;border:none;background:transparent;cursor:pointer;
-  color:var(--muted);font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;
-  letter-spacing:0.5px;transition:color 0.2s;text-transform:uppercase;
-}
-.nav-btn.active{color:var(--gold)}
-.nav-btn .ni{font-size:19px;line-height:1}
-
-/* ═══ COMPONENTS ══════════════════════════════════════════════════════════ */
-.card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
-.card.gold{border-color:rgba(255,200,0,0.3);box-shadow:0 0 20px rgba(255,200,0,0.08)}
-.card.green{border-color:rgba(0,232,122,0.3);box-shadow:0 0 20px rgba(0,232,122,0.08)}
-.card.red{border-color:rgba(255,45,85,0.3);box-shadow:0 0 20px rgba(255,45,85,0.08)}
-.card.blue{border-color:rgba(0,170,255,0.25);position:relative;overflow:hidden}
-.card.blue::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent)}
-.card.orange{border-color:rgba(255,122,0,0.3);box-shadow:0 0 16px rgba(255,122,0,0.06)}
-
-.clabel{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
-.clabel.gold{color:var(--gold)}
-.clabel.green{color:var(--green)}
-.clabel.red{color:var(--red)}
-.clabel.blue{color:var(--blue)}
-.clabel.orange{color:var(--orange)}
-
-.sec-title{
-  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;
-  color:var(--muted);letter-spacing:3px;text-transform:uppercase;
-  margin:18px 0 10px;display:flex;align-items:center;gap:8px;
-}
-.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* ═══ PROFILE GRID ════════════════════════════════════════════════════════ */
+:root{--bg:#050810;--s1:#0a0f1e;--s2:#0f1628;--border:#1c2d45;--gold:#ffc800;--green:#00e87a;--red:#ff2d55;--text:#ccddf0;--muted:#3d5a78}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif}
+.app{display:flex;flex-direction:column;min-height:100vh}
+.header{padding:20px;background:rgba(5,8,16,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;text-align:center}
+.header-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;color:var(--gold)}
+.content{padding:15px;flex:1;padding-bottom:80px}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:15px}
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.profile-btn{
-  background:var(--s2);border:1px solid var(--border);border-radius:10px;
-  padding:12px;cursor:pointer;transition:all 0.2s;text-align:left;
-  position:relative;overflow:hidden;
-}
-.profile-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity 0.2s}
-.profile-btn.active{background:rgba(255,200,0,0.07);border-color:rgba(255,200,0,0.4)}
-.profile-btn.active::before{opacity:1}
-.profile-btn:active{transform:scale(0.97)}
-.pb-asset{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px}
-.pb-sub{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
-.pb-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;margin-right:5px;box-shadow:0 0 6px var(--gold)}
-
-/* ═══ FORM CONTROLS ═══════════════════════════════════════════════════════ */
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.ctrl{
-  background:var(--s2);border:1px solid var(--border);border-radius:8px;
-  padding:10px 12px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;
-  outline:none;width:100%;transition:border-color 0.2s;
-  -webkit-appearance:none;appearance:none;
-}
-.ctrl:focus{border-color:var(--gold)}
-.ctrl-mono{font-family:'JetBrains Mono',monospace;font-size:12px}
-
-/* ═══ NEWS BANNER ═════════════════════════════════════════════════════════ */
-.news-banner{
-  background:rgba(255,122,0,0.1);border:1px solid rgba(255,122,0,0.35);
-  border-radius:12px;padding:12px 14px;margin-bottom:12px;
-  display:flex;align-items:flex-start;gap:10px;
-}
-.nb-icon{font-size:20px;flex-shrink:0}
-.nb-body{font-size:12px;color:var(--text);line-height:1.65}
-.nb-title{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--orange);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
-
-/* ═══ UPLOAD ══════════════════════════════════════════════════════════════ */
-.upload-zone{
-  border:2px dashed var(--border);border-radius:14px;
-  padding:36px 16px;text-align:center;cursor:pointer;
-  transition:all 0.25s;background:var(--s1);margin-bottom:12px;
-  position:relative;overflow:hidden;
-}
-.upload-zone::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,200,0,0.03),transparent);
-  pointer-events:none;
-}
-.upload-zone:active,.upload-zone.drag{
-  border-color:var(--gold);
-  background:rgba(255,200,0,0.05);
-  box-shadow:0 0 24px rgba(255,200,0,0.15);
-}
-.uz-icon{font-size:44px;display:block;margin-bottom:10px}
-.uz-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:5px}
-.uz-sub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
-#fileInput{display:none}
-
-/* ═══ PREVIEW ═════════════════════════════════════════════════════════════ */
-.preview-wrap{display:none;margin-bottom:12px;position:relative}
-.preview-wrap.show{display:block}
-.preview-img{width:100%;border-radius:12px;border:1px solid var(--border);display:block}
-.preview-bar{display:flex;gap:8px;margin-top:8px}
-.btn-danger{flex:1;background:var(--red-dim);color:var(--red);border:1px solid rgba(255,45,85,0.3);border-radius:8px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s}
-
-/* ═══ ANALYZE BUTTON ═══════════════════════════════════════════════════════ */
-.btn-analyze{
-  display:none;width:100%;
-  background:linear-gradient(135deg,var(--gold),#e6b000);
-  color:#000;border:none;border-radius:14px;padding:18px;
-  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;
-  cursor:pointer;transition:all 0.2s;margin-bottom:14px;
-  box-shadow:0 0 30px rgba(255,200,0,0.4);
-}
+.profile-btn{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px;color:#fff;cursor:pointer;text-align:center;font-size:13px}
+.profile-btn.active{border-color:var(--gold);background:rgba(255,200,0,0.08)}
+.ctrl{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;color:#fff;width:100%;margin-bottom:10px;outline:none}
+.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;cursor:pointer;margin-bottom:15px;background:rgba(28,45,69,0.2)}
+.btn-analyze{width:100%;background:linear-gradient(135deg, var(--gold), #e6b000);color:#000;border:none;border-radius:14px;padding:20px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;cursor:pointer;display:none;box-shadow:0 0 20px rgba(255,200,0,0.3)}
 .btn-analyze.show{display:block}
-.btn-analyze:active{transform:scale(0.97)}
-.btn-analyze:disabled{opacity:0.4;cursor:not-allowed}
+.nav{position:fixed;bottom:0;width:100%;background:var(--bg);border-top:1px solid var(--border);display:flex;padding:15px;justify-content:space-around}
+.nav-btn{background:none;border:none;color:var(--muted);font-size:12px;font-weight:bold;text-transform:uppercase}
+.nav-btn.active{color:var(--gold)}
+.result{display:none;margin-top:20px}
+.verdict-box{padding:25px;border-radius:16px;text-align:center;margin-bottom:15px;font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px}
+.call{background:rgba(0,232,122,0.15);color:var(--green);border:1px solid var(--green)}
+.put{background:rgba(255,45,85,0.15);color:var(--red);border:1px solid var(--red)}
+.loading{display:none;text-align:center;padding:30px;font-family:'JetBrains Mono',monospace;color:var(--gold)}
+#previewImg{width:100%;border-radius:12px;margin-bottom:15px;display:none;border:1px solid var(--border)}
+</style>
+</head>
+<body>
 
-.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold),#e6b000);color:#000;border:none;border-radius:10px;padding:13px;font-family:'Outfit',sans-serif;font-weight:800;font-size:14px;cursor:pointer;letter-spacing:0.5px}
-.btn-gold:active{opacity:0.85}
+<div class="app">
+  <div class="header">
+    <div class="header-name">JNTRADER IA PRO</div>
+    <div style="font-size:10px;color:var(--gold);letter-spacing:2px">BINÁRIAS • AVALON • BULLEX</div>
+  </div>
 
-/* ═══ LOADING ══════════════════════════════════════════════════════════════ */
-.loading{display:none;text-align:center;padding:44px 20px}
-.loading.show{display:block}
-.spinner-wrap{position:relative;width:60px;height:60px;margin:0 auto 20px}
-.spinner{width:60px;height:60px;border:2px solid var(--border);border-top-color:var(--gold);border-right-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite;position:absolute}
-.spinner2{width:46px;height:46px;border:2px solid var(--border);border-bottom-color:rgba(255,200,0,0.4);border-radius:50%;animation:spin 1.4s linear infinite reverse;position:absolute;top:7px;left:7px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-name{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:4px;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
-.loading-text{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);opacity:0.8}
-.loading-sub{font-size:11px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace;line-height:1.9}
-.loading-dots::after{content:'';animation:dots 1.4s infinite}
-@keyframes dots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+  <div class="content">
+    <div class="profile-grid">
+      <div class="profile-btn active" onclick="setProfile('Crypto IDX','M1','Avalon', this)">Crypto IDX • Avalon</div>
+      <div class="profile-btn" onclick="setProfile('EUR/USD','M1','Bullex', this)">EUR/USD • Bullex</div>
+    </div>
 
-/* ═══ RESULT ═══════════════════════════════════════════════════════════════ */
-.result{display:none}
-.result.show{display:block}
+    <div class="card">
+      <input class="ctrl" id="cfgAsset" placeholder="Ativo" value="Crypto IDX">
+      <select class="ctrl" id="cfgBroker">
+        <option>Avalon</option>
+        <option>Bullex</option>
+        <option>Stockity</option>
+        <option>Quotex</option>
+      </select>
+    </div>
 
-/* ═══ VERDICT BOX ══════════════════════════════════════════════════════════ */
-.verdict-box{border-radius:16px;padding:20px;margin-bottom:14px;border:1px solid;position:relative;overflow:hidden}
-.verdict-box.call{background:var(--green-dim);border-color:rgba(0,232,122,0.4)}
-.verdict-box.put{background:var(--red-dim);border-color:rgba(255,45,85,0.4)}
-.verdict-box.wait{background:rgba(255,200,0,0.07);border-color:rgba(255,200,0,0.35)}
-.v-icon{font-size:52px;line-height:1}
-.v-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;color:var(--muted)}
-.v-action{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:#fff;line-height:1;margin-bottom:6px}
-.verdict-box.call .v-action{color:var(--green)}
-.verdict-box.put .v-action{color:var(--red)}
-.verdict-box.wait .v-action{color:var(--gold)}
-.v-meta{font-size:12px;color:var(--text2
+    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+      <div style="font-size:30px">📊</div>
+      <div style="font-weight:bold; margin-top:10px">CLIQUE PARA ENVIAR PRINT</div>
+      <div style="font-size:11px; color:var(--muted)">Análise de Lotes e Big Players</div>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
+    
+    <img id="previewImg">
+    <button class="btn-analyze" id="btnAnalyze" onclick="analyze()">◆ ANALISAR E ENVIAR SINAL ◆</button>
+
+    <div class="loading" id="loading">📡 LENDO FLUXO DE ORDENS...</div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-btn active">🔍 Analisar</div>
+    <div class="nav-btn" onclick="alert('Chave API salva no navegador')">⚙️ Config</div>
+  </nav>
+</div>
+
+<script>
+// INTEGRAÇÃO TELEGRAM JNTrader_IA_bot
+const TELEGRAM_TOKEN = '8139536830:AAEmUvYf-u83V_m79C7Aiv9O_F36m3Y66fU'; 
+const TELEGRAM_CHAT_ID = '1457106603'; 
+
+let imgB64 = null;
+
+function setProfile(a, t, b, el) {
+  document.querySelectorAll('.profile-btn').forEach(btn => btn.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cfgAsset').value = a;
+  document.getElementById('cfgBroker').value = b;
+}
+
+function handleFile(e) {
+  const file = e.target.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      imgB64 = ev.target.result.split(',')[1];
+      document.getElementById('previewImg').src = ev.target.result;
+      document.getElementById('previewImg').style.display = 'block';
+      document.getElementById('btnAnalyze').classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+async function analyze() {
+  const apiKey = localStorage.getItem('jn_api_key');
+  if(!apiKey) { alert("Por favor, configure sua Anthropic Key nas configurações do App!"); return; }
+  
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('btnAnalyze').style.display = 'none';
+
+  const asset = document.getElementById('cfgAsset').value;
+  const broker = document.getElementById('cfgBroker').value;
+
+  const prompt = `Você é o JNTrader IA. Analise este gráfico de Opções Binárias (${asset} na ${broker}). Foque em Price Action institucional, Lotes e Big Players. 
+  Retorne APENAS um JSON: {"verdict": "CALL" ou "PUT", "confidence": 0-100, "reason": "motivo técnico curto"}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'x-api-key': apiKey, 
+        'anthropic-version': '2023-06-01',
+        'dangerously-allow-browser': true 
+      },
+      body: JSON.stringify({
+        model: 'claude-3-sonnet-20240229',
+        max_tokens: 500,
+        messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imgB64 } }, { type: 'text', text: prompt }] }]
+      })
+    });
+
+    const data = await res.json();
+    const d = JSON.parse(data.content[0].text);
+    
+    // Resultado na Tela
+    const resDiv = document.getElementById('result');
+    resDiv.style.display = 'block';
+    resDiv.innerHTML = `<div class="verdict-box ${d.verdict.toLowerCase()}">${d.verdict}</div>
+                        <div class="card"><p><b>Confiança:</b> ${d.confidence}%</p><p style="margin-top:10px">${d.reason}</p></div>`;
+
+    // Enviar para o Telegram
+    const emoji = d.verdict === 'CALL' ? '🟢 COMPRA' : '🔴 VENDA';
+    const msg = `🚀 <b>SINAL JNTRADER IA</b>\n\n<b>Ativo:</b> ${asset}\n<b>Corretora:</b> ${broker}\n<b>Direção:</b> ${emoji}\n<b>Confiança:</b> ${d.confidence}%\n\n<b>Análise:</b> ${d.reason}`;
+    
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: 'HTML' })
+    });
+
+  } catch(e) {
+    alert("Erro na análise. Verifique se sua Anthropic Key tem saldo.");
+  } finally {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('btnAnalyze').style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

@@ -15,17 +15,17 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 .content{padding:15px;flex:1;padding-bottom:100px}
 .card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:15px}
 .clabel{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);margin-bottom:8px;text-transform:uppercase}
-.ctrl{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;color:#fff;width:100%;margin-bottom:12px;font-size:14px}
+.ctrl{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;color:#fff;width:100%;margin-bottom:12px;font-size:14px;outline:none}
 .btn-broker{background:var(--s2);border:1px solid var(--border);padding:12px 5px;border-radius:8px;color:#fff;font-size:11px;cursor:pointer;width:31%;margin-bottom:5px;display:inline-block;text-align:center}
 .btn-broker.active{border-color:var(--gold);background:rgba(255,200,0,0.1);color:var(--gold)}
-.btn-analyze{width:100%;background:linear-gradient(135deg, var(--gold), #e6b000);color:#000;border:none;border-radius:14px;padding:20px;font-family:'Bebas Neue',sans-serif;font-size:22px;cursor:pointer;font-weight:bold;display:block}
+.btn-analyze{width:100%;background:linear-gradient(135deg, var(--gold), #e6b000);color:#000;border:none;border-radius:14px;padding:20px;font-family:'Bebas Neue',sans-serif;font-size:22px;cursor:pointer;font-weight:bold;margin-top:10px}
 .nav{position:fixed;bottom:0;width:100%;background:var(--bg);border-top:1px solid var(--border);display:flex;padding:15px;justify-content:space-around;z-index:999}
-.nav-btn{background:none;border:none;color:var(--muted);font-size:12px;font-weight:bold;padding:10px;cursor:pointer;text-transform:uppercase}
+.nav-btn{background:none;border:none;color:var(--muted);font-size:12px;font-weight:bold;padding:10px;cursor:pointer}
 .nav-btn.active{color:var(--gold)}
 #previewImg{width:100%;border-radius:12px;margin-bottom:15px;display:none;border:2px solid var(--gold)}
-.file-wrapper { position: relative; width: 100%; height: 60px; background: var(--s2); border: 2px dashed var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer;}
-.file-wrapper input { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; z-index: 10; }
-.file-wrapper span { color: var(--gold); font-weight: bold; pointer-events: none; }
+.file-wrapper { position: relative; width: 100%; height: 70px; background: var(--s2); border: 2px dashed var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer;}
+.file-wrapper input { position: absolute; left: 0; top: 0; opacity: 1; width: 100%; height: 100%; cursor: pointer; z-index: 10; opacity: 0;}
+.file-wrapper span { color: var(--gold); font-weight: bold; pointer-events: none; position: absolute;}
 </style>
 </head>
 <body>
@@ -33,22 +33,24 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 <div class="app">
   <div class="header">
     <div class="header-name">JNTRADER IA PRO</div>
-    <div style="font-size:10px;color:var(--gold)">PROFISSIONAL • GEMINI AI</div>
+    <div style="font-size:10px;color:var(--gold);letter-spacing:2px">SISTEMA COMPLETO • PAID TIER</div>
   </div>
 
   <div class="content">
     <div class="card">
-      <div class="clabel">⭐ Ativo Favorito</div>
-      <button class="ctrl" style="color:var(--gold);font-weight:bold;cursor:pointer" onclick="document.getElementById('cfgAsset').value='Crypto IDX'">MERCADO: CRYPTO IDX</button>
+      <div class="clabel">⭐ Ativo em Destaque</div>
+      <button class="ctrl" style="color:var(--gold);font-weight:bold" id="btnCrypto">MERCADO: CRYPTO IDX</button>
       
-      <div style="display:flex; gap:10px">
+      <div style="display:flex; gap:10px; margin-top:10px">
           <div style="flex:2">
-            <div class="clabel">📊 Ativo</div>
+            <div class="clabel">📊 Selecionar Ativo</div>
             <select class="ctrl" id="cfgAsset">
                 <option value="Crypto IDX">Crypto IDX</option>
                 <option value="EUR/USD">EUR/USD</option>
                 <option value="EUR/USD (OTC)">EUR/USD (OTC)</option>
                 <option value="USD/BRL (OTC)">USD/BRL (OTC)</option>
+                <option value="EUR/JPY">EUR/JPY</option>
+                <option value="AUD/CAD">AUD/CAD</option>
             </select>
           </div>
           <div style="flex:1">
@@ -58,20 +60,21 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
       </div>
 
       <div class="clabel">🏢 Corretora</div>
-      <div style="display:flex; flex-wrap:wrap; gap:5px">
-          <button class="btn-broker active" onclick="setBroker('Avalon', this)">Avalon</button>
-          <button class="btn-broker" onclick="setBroker('Stockity', this)">Stockity</button>
-          <button class="btn-broker" onclick="setBroker('Bullex', this)">Bullex</button>
-          <button class="btn-broker" onclick="setBroker('IQ Option', this)">IQ Option</button>
-          <button class="btn-broker" onclick="setBroker('Quotex', this)">Quotex</button>
+      <div style="display:flex; flex-wrap:wrap; gap:5px" id="brokerGroup">
+          <button class="btn-broker active" data-name="Avalon">Avalon</button>
+          <button class="btn-broker" data-name="Stockity">Stockity</button>
+          <button class="btn-broker" data-name="Bullex">Bullex</button>
+          <button class="btn-broker" data-name="Polarium">Polarium</button>
+          <button class="btn-broker" data-name="IQ Option">IQ Option</button>
+          <button class="btn-broker" data-name="Quotex">Quotex</button>
       </div>
       <input type="hidden" id="selectedBroker" value="Avalon">
     </div>
 
     <div class="card">
-      <div class="clabel">📸 PASSO 1: ANEXAR GRÁFICO</div>
-      <div class="file-wrapper">
-          <input type="file" id="fileInput" accept="image/*" onchange="handleFile(event)">
+      <div class="clabel">📸 PASSO 1: ANEXAR PRINT</div>
+      <div class="file-wrapper" id="uploadArea">
+          <input type="file" id="fileInput" accept="image/*">
           <span id="fileLabel">CLIQUE PARA SELECIONAR</span>
       </div>
     </div>
@@ -79,31 +82,35 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
     <img id="previewImg">
     
     <div id="areaBotao" style="display:none">
-        <div class="clabel">🚀 PASSO 2: ANALISAR</div>
-        <button class="btn-analyze" onclick="analyze()">◆ GERAR ANÁLISE AGORA ◆</button>
+        <div class="clabel">🚀 PASSO 2: EXECUTAR IA</div>
+        <button class="btn-analyze" id="btnAnalyze">◆ ANALISAR E ENVIAR SINAL ◆</button>
     </div>
 
-    <div id="loading" style="display:none; text-align:center; color:var(--gold); padding:20px">📡 PROCESSANDO... AGUARDE...</div>
+    <div id="loading" style="display:none; text-align:center; color:var(--gold); padding:20px; font-weight:bold">📡 PROCESSANDO... AGUARDE...</div>
   </div>
 
   <nav class="nav">
     <button class="nav-btn active" onclick="location.reload()">🔍 ANALISAR</button>
-    <button class="nav-btn" onclick="goConfig()" style="cursor:pointer">⚙️ CONFIG</button>
+    <button class="nav-btn" id="btnConfig">⚙️ CONFIG</button>
   </nav>
 </div>
 
 <script>
 let imgB64 = null;
 
-// Função para selecionar corretora
-window.setBroker = function(name, btn) {
-    document.getElementById('selectedBroker').value = name;
-    document.querySelectorAll('.btn-broker').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-};
+document.querySelectorAll('.btn-broker').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-broker').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('selectedBroker').value = btn.getAttribute('data-name');
+    });
+});
 
-// Função para ler o arquivo
-window.handleFile = function(e) {
+document.getElementById('btnCrypto').addEventListener('click', () => {
+    document.getElementById('cfgAsset').value = 'Crypto IDX';
+});
+
+document.getElementById('fileInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if(file) {
         document.getElementById('fileLabel').innerText = "FOTO CARREGADA!";
@@ -116,34 +123,16 @@ window.handleFile = function(e) {
         };
         reader.readAsDataURL(file);
     }
-};
+});
 
-// Função de Configuração
-window.goConfig = function() {
-    try {
-        const current = localStorage.getItem('jn_gemini_key') || "";
-        const key = window.prompt("Cole sua chave Gemini (AIza...) aqui:", current);
-        if(key !== null) {
-            localStorage.setItem('jn_gemini_key', key.trim());
-            alert("Chave guardada com sucesso!");
-        }
-    } catch (err) {
-        alert("Erro ao abrir configuração: " + err.message);
-    }
-};
+document.getElementById('btnConfig').addEventListener('click', () => {
+    const key = prompt("Cole sua chave Gemini (AIza...):", localStorage.getItem('jn_gemini_key') || "");
+    if(key) { localStorage.setItem('jn_gemini_key', key.trim()); alert("Chave Salva!"); }
+});
 
-// Função de Análise Principal
-window.analyze = async function() {
+document.getElementById('btnAnalyze').addEventListener('click', async () => {
     const apiKey = localStorage.getItem('jn_gemini_key');
-    if(!apiKey || apiKey === "") { 
-        alert("Falta a chave! Clique em CONFIG e cole a sua chave AIza primeiro."); 
-        return; 
-    }
-
-    if(!imgB64) {
-        alert("Selecione uma foto do gráfico primeiro!");
-        return;
-    }
+    if(!apiKey) return alert("Configure sua chave no CONFIG!");
 
     document.getElementById('loading').style.display = 'block';
     document.getElementById('areaBotao').style.display = 'none';
@@ -151,45 +140,34 @@ window.analyze = async function() {
     const payload = {
         contents: [{
             parts: [
-                {text: "Analise o gráfico. Diga se é CALL ou PUT. Responda apenas JSON."},
+                {text: "Analise o gráfico. Responda APENAS em JSON: {\"verdict\": \"CALL/PUT\", \"confidence\": 0-100, \"reason\": \"texto\"}"},
                 {inline_data: {mime_type: "image/jpeg", data: imgB64}}
             ]
         }]
     };
 
     try {
-        const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
-            method: 'POST',
-            body: JSON.stringify(payload)
+        // CORREÇÃO DO MODELO PARA O GEMINI 2.0 FLASH
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+            method: 'POST', body: JSON.stringify(payload)
         });
-        
         const data = await res.json();
         
-        if(data.error) {
-            alert("Erro na Chave Gemini: " + data.error.message);
-            return;
-        }
+        if(data.error) { alert("Erro na API: " + data.error.message); return; }
 
-        const responseText = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
-        const d = JSON.parse(responseText);
+        const text = data.candidates[0].content.parts[0].text.replace(/```json|```/g, "").trim();
+        const d = JSON.parse(text);
         
-        const broker = document.getElementById('selectedBroker').value;
-        const msg = `SINAL JNTRADER\nCorretora: ${broker}\nDireção: ${d.verdict}\nConfiança: ${d.confidence}%\nMotivo: ${d.reason}`;
+        const msg = `🚀 <b>SINAL JNTRADER</b>\n\n<b>Corretora:</b> ${document.getElementById('selectedBroker').value}\n<b>Ativo:</b> ${document.getElementById('cfgAsset').value}\n<b>Direção:</b> ${d.verdict}\n<b>Confiança:</b> ${d.confidence}%\n<b>Análise:</b> ${d.reason}`;
         
-        await fetch('https://api.telegram.org/bot8139536830:AAEmUvYf-u83V_m79C7Aiv9O_F36m3Y66fU/sendMessage', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({chat_id: '1457106603', text: msg})
+        await fetch(`https://api.telegram.org/bot8139536830:AAEmUvYf-u83V_m79C7Aiv9O_F36m3Y66fU/sendMessage`, {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({chat_id: '1457106603', text: msg, parse_mode: 'HTML'})
         });
-        
-        alert("✅ SINAL ENVIADO COM SUCESSO!");
-    } catch(e) {
-        alert("Erro: Verifique a ligação ou a chave Gemini.");
-    } finally {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('areaBotao').style.display = 'block';
-    }
-};
+        alert("Sinal enviado!");
+    } catch(e) { alert("Erro na análise."); }
+    finally { document.getElementById('loading').style.display = 'none'; document.getElementById('areaBotao').style.display = 'block'; }
+});
 </script>
 </body>
 </html>

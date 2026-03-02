@@ -12,15 +12,13 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif}
 .app{display:flex;flex-direction:column;min-height:100vh}
-.header{padding:20px;background:rgba(5,8,16,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;text-align:center}
+.header{padding:15px;background:rgba(5,8,16,0.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;text-align:center}
 .header-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;color:var(--gold)}
 .content{padding:15px;flex:1;padding-bottom:80px}
 .card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:15px}
-.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.profile-btn{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px;color:#fff;cursor:pointer;text-align:center;font-size:13px}
-.profile-btn.active{border-color:var(--gold);background:rgba(255,200,0,0.08)}
-.ctrl{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;color:#fff;width:100%;margin-bottom:10px;outline:none}
-.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:40px 20px;text-align:center;cursor:pointer;margin-bottom:15px;background:rgba(28,45,69,0.2)}
+.clabel{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.ctrl{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px;color:#fff;width:100%;margin-bottom:12px;outline:none;font-size:14px}
+.upload-zone{border:2px dashed var(--border);border-radius:14px;padding:30px 20px;text-align:center;cursor:pointer;margin-bottom:15px;background:rgba(28,45,69,0.2)}
 .btn-analyze{width:100%;background:linear-gradient(135deg, var(--gold), #e6b000);color:#000;border:none;border-radius:14px;padding:20px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;cursor:pointer;display:none;box-shadow:0 0 20px rgba(255,200,0,0.3)}
 .btn-analyze.show{display:block}
 .nav{position:fixed;bottom:0;width:100%;background:var(--bg);border-top:1px solid var(--border);display:flex;padding:15px;justify-content:space-around}
@@ -39,58 +37,73 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif}
 <div class="app">
   <div class="header">
     <div class="header-name">JNTRADER IA PRO</div>
-    <div style="font-size:10px;color:var(--gold);letter-spacing:2px">BINÁRIAS • AVALON • BULLEX</div>
+    <div style="font-size:10px;color:var(--gold);letter-spacing:2px">OPÇÕES BINÁRIAS • SMART ANALYSIS</div>
   </div>
 
   <div class="content">
-    <div class="profile-grid">
-      <div class="profile-btn active" onclick="setProfile('Crypto IDX','M1','Avalon', this)">Crypto IDX • Avalon</div>
-      <div class="profile-btn" onclick="setProfile('EUR/USD','M1','Bullex', this)">EUR/USD • Bullex</div>
-    </div>
-
+    
     <div class="card">
-      <input class="ctrl" id="cfgAsset" placeholder="Ativo" value="Crypto IDX">
+      <div class="clabel">⭐ Ativo em Destaque</div>
+      <button class="ctrl" style="background:rgba(255,200,0,0.1); border-color:var(--gold); font-weight:bold" onclick="document.getElementById('cfgAsset').value='Crypto IDX'">CRYPTO IDX (Avalon/Stockity)</button>
+      
+      <div class="clabel" style="margin-top:10px">📊 Selecionar Outro Ativo</div>
+      <select class="ctrl" id="cfgAsset">
+        <option value="Crypto IDX">Crypto IDX</option>
+        <option value="EUR/USD">EUR/USD</option>
+        <option value="EUR/USD (OTC)">EUR/USD (OTC)</option>
+        <option value="GBP/USD">GBP/USD</option>
+        <option value="USD/BRL (OTC)">USD/BRL (OTC)</option>
+        <option value="EUR/JPY">EUR/JPY</option>
+        <option value="AUD/CAD">AUD/CAD</option>
+        <option value="Intel (OTC)">Intel (OTC)</option>
+        <option value="Boeing (OTC)">Boeing (OTC)</option>
+      </select>
+
+      <div class="clabel">⏱️ Tempo Gráfico</div>
+      <select class="ctrl" id="cfgTimeframe">
+        <option value="M1">1 MINUTO (M1)</option>
+        <option value="M5" selected>5 MINUTOS (M5)</option>
+        <option value="M15">15 MINUTOS (M15)</option>
+      </select>
+
+      <div class="clabel">🏢 Corretora</div>
       <select class="ctrl" id="cfgBroker">
-        <option>Avalon</option>
-        <option>Bullex</option>
-        <option>Stockity</option>
-        <option>Quotex</option>
+        <option value="Avalon">Avalon</option>
+        <option value="Stockity">Stockity</option>
+        <option value="Bullex">Bullex</option>
+        <option value="Polarium">Polarium</option>
+        <option value="IQ Option">IQ Option</option>
+        <option value="Quotex">Quotex</option>
+        <option value="Pocket Option">Pocket Option</option>
+        <option value="Binomo">Binomo</option>
       </select>
     </div>
 
     <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-      <div style="font-size:30px">📊</div>
-      <div style="font-weight:bold; margin-top:10px">CLIQUE PARA ENVIAR PRINT</div>
-      <div style="font-size:11px; color:var(--muted)">Análise de Lotes e Big Players</div>
+      <div style="font-size:30px">📸</div>
+      <div style="font-weight:bold; margin-top:10px">ENVIAR PRINT DO GRÁFICO</div>
+      <div style="font-size:11px; color:var(--muted)">Leitura de Lotes e Big Players</div>
     </div>
     <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
     
     <img id="previewImg">
     <button class="btn-analyze" id="btnAnalyze" onclick="analyze()">◆ ANALISAR E ENVIAR SINAL ◆</button>
 
-    <div class="loading" id="loading">📡 LENDO FLUXO DE ORDENS...</div>
+    <div class="loading" id="loading">📡 MAPEANDO ZONAS E FLUXO...</div>
     <div class="result" id="result"></div>
   </div>
 
   <nav class="nav">
     <div class="nav-btn active">🔍 Analisar</div>
-    <div class="nav-btn" onclick="alert('Chave API salva no navegador')">⚙️ Config</div>
+    <div class="nav-btn" onclick="goConfig()">⚙️ Config</div>
   </nav>
 </div>
 
 <script>
-// INTEGRAÇÃO TELEGRAM JNTrader_IA_bot
 const TELEGRAM_TOKEN = '8139536830:AAEmUvYf-u83V_m79C7Aiv9O_F36m3Y66fU'; 
 const TELEGRAM_CHAT_ID = '1457106603'; 
 
 let imgB64 = null;
-
-function setProfile(a, t, b, el) {
-  document.querySelectorAll('.profile-btn').forEach(btn => btn.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('cfgAsset').value = a;
-  document.getElementById('cfgBroker').value = b;
-}
 
 function handleFile(e) {
   const file = e.target.files[0];
@@ -106,17 +119,27 @@ function handleFile(e) {
   }
 }
 
+function goConfig() {
+    let key = prompt("Insira sua Anthropic API Key (sk-ant...):", localStorage.getItem('jn_api_key') || "");
+    if(key) {
+        localStorage.setItem('jn_api_key', key);
+        alert("Chave salva com sucesso!");
+    }
+}
+
 async function analyze() {
   const apiKey = localStorage.getItem('jn_api_key');
-  if(!apiKey) { alert("Por favor, configure sua Anthropic Key nas configurações do App!"); return; }
+  if(!apiKey) { alert("Configure sua Anthropic Key no botão Config!"); return; }
   
   document.getElementById('loading').style.display = 'block';
   document.getElementById('btnAnalyze').style.display = 'none';
 
   const asset = document.getElementById('cfgAsset').value;
+  const timeframe = document.getElementById('cfgTimeframe').value;
   const broker = document.getElementById('cfgBroker').value;
 
-  const prompt = `Você é o JNTrader IA. Analise este gráfico de Opções Binárias (${asset} na ${broker}). Foque em Price Action institucional, Lotes e Big Players. 
+  const prompt = `Você é o JNTrader IA. Analise o gráfico de Opções Binárias: Ativo ${asset}, Tempo ${timeframe}, Corretora ${broker}. 
+  Foque em Lotes, Pavios, Big Players e Price Action. 
   Retorne APENAS um JSON: {"verdict": "CALL" ou "PUT", "confidence": 0-100, "reason": "motivo técnico curto"}`;
 
   try {
@@ -138,15 +161,13 @@ async function analyze() {
     const data = await res.json();
     const d = JSON.parse(data.content[0].text);
     
-    // Resultado na Tela
     const resDiv = document.getElementById('result');
     resDiv.style.display = 'block';
     resDiv.innerHTML = `<div class="verdict-box ${d.verdict.toLowerCase()}">${d.verdict}</div>
                         <div class="card"><p><b>Confiança:</b> ${d.confidence}%</p><p style="margin-top:10px">${d.reason}</p></div>`;
 
-    // Enviar para o Telegram
     const emoji = d.verdict === 'CALL' ? '🟢 COMPRA' : '🔴 VENDA';
-    const msg = `🚀 <b>SINAL JNTRADER IA</b>\n\n<b>Ativo:</b> ${asset}\n<b>Corretora:</b> ${broker}\n<b>Direção:</b> ${emoji}\n<b>Confiança:</b> ${d.confidence}%\n\n<b>Análise:</b> ${d.reason}`;
+    const msg = `🚀 <b>SINAL JNTRADER IA</b>\n\n<b>Ativo:</b> ${asset}\n<b>Tempo:</b> ${timeframe}\n<b>Corretora:</b> ${broker}\n<b>Direção:</b> ${emoji}\n<b>Confiança:</b> ${d.confidence}%\n\n<b>Análise:</b> ${d.reason}`;
     
     await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: 'POST',
@@ -155,7 +176,7 @@ async function analyze() {
     });
 
   } catch(e) {
-    alert("Erro na análise. Verifique se sua Anthropic Key tem saldo.");
+    alert("Erro na análise. Verifique sua chave ou saldo da Anthropic.");
   } finally {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('btnAnalyze').style.display = 'block';
